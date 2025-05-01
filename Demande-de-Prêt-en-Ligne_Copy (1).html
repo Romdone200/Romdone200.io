@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kifaa Finance - Prêts pour l'Afrique Francophone</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#0056b3',secondary:'#ff9800'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Poppins', sans-serif;
+}
+.hero-section {
+background-image: url('https://readdy.ai/api/search-image?query=African%2520business%2520people%2520discussing%2520financial%2520documents%2520in%2520a%2520modern%2520office%2520with%2520a%2520soft%2520gradient%2520blue%2520background%2520on%2520the%2520left%2520side%2520transitioning%2520to%2520a%2520clear%2520image%2520on%2520the%2520right.%2520The%2520left%2520side%2520has%2520a%2520clean%2520area%2520for%2520text%2520content.%2520Professional%2520atmosphere%2520with%2520natural%2520lighting.%2520High-quality%2520professional%2520photography.&width=1200&height=600&seq=hero1&orientation=landscape');
+background-size: cover;
+background-position: center;
+}
+.amortization-table th, .amortization-table td {
+padding: 0.75rem;
+text-align: center;
+}
+.amortization-table th {
+background-color: #f3f4f6;
+}
+.amortization-table tr:nth-child(even) {
+background-color: #f9fafb;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+.custom-checkbox {
+position: relative;
+display: inline-block;
+width: 20px;
+height: 20px;
+margin-right: 8px;
+}
+.custom-checkbox input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.checkmark {
+position: absolute;
+top: 0;
+left: 0;
+height: 20px;
+width: 20px;
+background-color: #fff;
+border: 2px solid #d1d5db;
+border-radius: 4px;
+}
+.custom-checkbox input:checked ~ .checkmark {
+background-color: #0056b3;
+border-color: #0056b3;
+}
+.checkmark:after {
+content: "";
+position: absolute;
+display: none;
+}
+.custom-checkbox input:checked ~ .checkmark:after {
+display: block;
+}
+.custom-checkbox .checkmark:after {
+left: 6px;
+top: 2px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.custom-select {
+position: relative;
+}
+.custom-select select {
+display: none;
+}
+.select-selected {
+background-color: white;
+}
+.select-items div, .select-selected {
+padding: 8px 16px;
+cursor: pointer;
+}
+.select-items {
+position: absolute;
+background-color: white;
+top: 100%;
+left: 0;
+right: 0;
+z-index: 99;
+max-height: 300px;
+overflow-y: auto;
+border: 1px solid #e5e7eb;
+border-radius: 8px;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+display: none;
+}
+.select-hide {
+display: none;
+}
+.select-items div:hover {
+background-color: #f3f4f6;
+}
+</style>
+</head>
+<body class="bg-white">
+<!-- Header -->
+<header class="bg-white shadow-sm fixed w-full z-50">
+<div class="container mx-auto px-4 py-4 flex justify-between items-center">
+<a href="#" class="flex items-center">
+<span class="text-3xl font-['Pacifico'] text-primary">Kifaa Finance</span>
+</a>
+<nav class="hidden md:flex space-x-8">
+<a href="#" class="text-gray-700 hover:text-primary font-medium">Accueil</a>
+<a href="#process" class="text-gray-700 hover:text-primary font-medium">Processus</a>
+<a href="#countries" class="text-gray-700 hover:text-primary font-medium">Pays éligibles</a>
+<a href="#faq" class="text-gray-700 hover:text-primary font-medium">FAQ</a>
+<a href="#contact" class="text-gray-700 hover:text-primary font-medium">Contact</a>
+</nav>
+<a href="#loan-form" class="hidden md:inline-block bg-primary text-white px-6 py-2 !rounded-button font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">
+Demander un Prêt
+</a>
+<button class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700" id="mobile-menu-button">
+<i class="ri-menu-line ri-2x"></i>
+</button>
+</div>
+<!-- Mobile Menu -->
+<div class="md:hidden bg-white w-full hidden absolute top-full left-0 shadow-md" id="mobile-menu">
+<div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+<a href="#" class="text-gray-700 hover:text-primary font-medium py-2">Accueil</a>
+<a href="#process" class="text-gray-700 hover:text-primary font-medium py-2">Processus</a>
+<a href="#countries" class="text-gray-700 hover:text-primary font-medium py-2">Pays éligibles</a>
+<a href="#faq" class="text-gray-700 hover:text-primary font-medium py-2">FAQ</a>
+<a href="#contact" class="text-gray-700 hover:text-primary font-medium py-2">Contact</a>
+<a href="#loan-form" class="bg-primary text-white px-6 py-3 !rounded-button font-medium hover:bg-primary/90 transition-colors text-center whitespace-nowrap">
+Demander un Prêt
+</a>
+</div>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="hero-section pt-24 md:pt-32 pb-16 md:pb-24">
+<div class="container mx-auto px-4 w-full">
+<div class="max-w-2xl bg-white/90 backdrop-blur-sm p-8 md:p-12 rounded-xl">
+<h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Solutions de Prêt pour l'Afrique Francophone</h1>
+<p class="text-lg md:text-xl text-gray-700 mb-8">Accédez à des prêts adaptés aux besoins des pays de la zone UEMOA et CEMAC. Financement rapide et sécurisé en francs CFA.</p>
+<div class="flex flex-col sm:flex-row gap-4">
+<a href="#loan-form" class="bg-primary text-white px-8 py-3 !rounded-button font-medium hover:bg-primary/90 transition-colors text-center whitespace-nowrap">
+Demander un Prêt
+</a>
+<a href="#process" class="bg-white text-primary border border-primary px-8 py-3 !rounded-button font-medium hover:bg-gray-50 transition-colors text-center whitespace-nowrap">
+Comment ça marche
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Loan Form Section -->
+<section id="loan-form" class="py-16 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">Demande de Prêt</h2>
+<p class="text-lg text-gray-700 max-w-3xl mx-auto">Complétez le formulaire ci-dessous pour soumettre votre demande de prêt. Après validation, nous vous contacterons via WhatsApp pour finaliser votre dossier.</p>
+</div>
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+<div class="p-8">
+<form id="loan-request-form">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<div>
+<label for="fullname" class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label>
+<input type="text" id="fullname" name="fullname" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Entrez votre nom complet" required>
+</div>
+<div>
+<label for="email" class="block text-sm font-medium text-gray-700 mb-2">Adresse e-mail</label>
+<input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Entrez votre adresse e-mail" required>
+</div>
+<div>
+<label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Numéro de téléphone (WhatsApp)</label>
+<input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Ex: +225 07 12 34 56" required>
+</div>
+<div class="custom-select">
+<label for="country" class="block text-sm font-medium text-gray-700 mb-2">Pays de résidence</label>
+<div class="relative">
+<div class="select-selected flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+<span>Sélectionnez votre pays</span>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</div>
+<div class="select-items">
+<div data-value="benin">Bénin</div>
+<div data-value="togo">Togo</div>
+<div data-value="senegal">Sénégal</div>
+<div data-value="cote_ivoire">Côte d'Ivoire</div>
+<div data-value="burkina_faso">Burkina Faso</div>
+<div data-value="mali">Mali</div>
+<div data-value="niger">Niger</div>
+<div data-value="guinee_bissau">Guinée-Bissau</div>
+<div data-value="cameroun">Cameroun</div>
+<div data-value="tchad">Tchad</div>
+<div data-value="gabon">Gabon</div>
+<div data-value="guinee_equatoriale">Guinée équatoriale</div>
+<div data-value="republique_centrafricaine">République Centrafricaine</div>
+<div data-value="congo_brazzaville">Congo-Brazzaville</div>
+</div>
+<select id="country" name="country" class="hidden" required>
+<option value="">Sélectionnez votre pays</option>
+<option value="benin">Bénin</option>
+<option value="togo">Togo</option>
+<option value="senegal">Sénégal</option>
+<option value="cote_ivoire">Côte d'Ivoire</option>
+<option value="burkina_faso">Burkina Faso</option>
+<option value="mali">Mali</option>
+<option value="niger">Niger</option>
+<option value="guinee_bissau">Guinée-Bissau</option>
+<option value="cameroun">Cameroun</option>
+<option value="tchad">Tchad</option>
+<option value="gabon">Gabon</option>
+<option value="guinee_equatoriale">Guinée équatoriale</option>
+<option value="republique_centrafricaine">République Centrafricaine</option>
+<option value="congo_brazzaville">Congo-Brazzaville</option>
+</select>
+</div>
+</div>
+</div>
+<div class="mb-8">
+<h3 class="text-xl font-semibold text-gray-900 mb-4">Calculateur de prêt</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div>
+<label for="loan-amount" class="block text-sm font-medium text-gray-700 mb-2">Montant souhaité (FCFA)</label>
+<div class="relative">
+<input type="number" id="loan-amount" name="loan-amount" min="50000" max="10000000" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Ex: 500000" required>
+</div>
+</div>
+<div>
+<label for="loan-duration" class="block text-sm font-medium text-gray-700 mb-2">Durée (mois)</label>
+<div class="relative">
+<input type="number" id="loan-duration" name="loan-duration" min="1" max="60" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Ex: 12" required>
+</div>
+</div>
+<div>
+<label for="guarantee-amount" class="block text-sm font-medium text-gray-700 mb-2">Garantie (10%)</label>
+<div class="relative">
+<input type="text" id="guarantee-amount" name="guarantee-amount" class="w-full px-4 py-3 border border-gray-300 rounded bg-gray-50 focus:outline-none" readonly>
+</div>
+</div>
+</div>
+</div>
+<div class="mb-8">
+<button type="button" id="calculate-btn" class="bg-secondary text-white px-6 py-3 !rounded-button font-medium hover:bg-secondary/90 transition-colors whitespace-nowrap">
+Calculer le tableau d'amortissement
+</button>
+</div>
+<div id="amortization-table-container" class="mb-8 hidden overflow-x-auto">
+<h3 class="text-xl font-semibold text-gray-900 mb-4">Tableau d'amortissement</h3>
+<table class="amortization-table w-full border-collapse border border-gray-200 rounded">
+<thead>
+<tr>
+<th class="border border-gray-200">Mois</th>
+<th class="border border-gray-200">Mensualité (FCFA)</th>
+<th class="border border-gray-200">Capital (FCFA)</th>
+<th class="border border-gray-200">Intérêts (FCFA)</th>
+<th class="border border-gray-200">Capital restant (FCFA)</th>
+</tr>
+</thead>
+<tbody id="amortization-table-body">
+<!-- Table rows will be generated dynamically -->
+</tbody>
+</table>
+</div>
+<div class="mb-8">
+<label class="flex items-start">
+<div class="custom-checkbox">
+<input type="checkbox" id="terms" name="terms" required>
+<span class="checkmark"></span>
+</div>
+<span class="text-sm text-gray-700">J'accepte les <a href="#" class="text-primary hover:underline">conditions générales</a> et la <a href="#" class="text-primary hover:underline">politique de confidentialité</a> de Kifaa Finance.</span>
+</label>
+</div>
+<div>
+<button type="submit" class="bg-primary text-white px-8 py-3 !rounded-button font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">
+Soumettre ma demande
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</section>
+<!-- Process Section -->
+<section id="process" class="py-16 bg-white">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">Comment ça marche</h2>
+<p class="text-lg text-gray-700 max-w-3xl mx-auto">Notre processus simple vous permet d'obtenir un prêt en quelques étapes faciles.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+<div class="bg-white p-6 rounded-xl shadow-md text-center">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="ri-file-list-3-line ri-2x text-primary"></i>
+</div>
+<h3 class="text-xl font-semibold text-gray-900 mb-2">1. Remplissez le formulaire</h3>
+<p class="text-gray-700">Complétez notre formulaire en ligne avec vos informations personnelles et le montant de prêt souhaité.</p>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-md text-center">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="ri-whatsapp-line ri-2x text-primary"></i>
+</div>
+<h3 class="text-xl font-semibold text-gray-900 mb-2">2. Validation par WhatsApp</h3>
+<p class="text-gray-700">Notre équipe vous contactera via WhatsApp pour vérifier vos informations et finaliser votre demande.</p>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-md text-center">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="ri-bank-card-line ri-2x text-primary"></i>
+</div>
+<h3 class="text-xl font-semibold text-gray-900 mb-2">3. Réception du prêt</h3>
+<p class="text-gray-700">Après approbation, le montant du prêt sera transféré sur votre compte bancaire ou mobile money.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Countries Section -->
+<section id="countries" class="py-16 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">Pays éligibles</h2>
+<p class="text-lg text-gray-700 max-w-3xl mx-auto">Nous offrons nos services de prêt aux résidents des pays utilisant le franc CFA (UEMOA et CEMAC).</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+<div class="bg-white p-6 rounded-xl shadow-md">
+<h3 class="text-xl font-semibold text-gray-900 mb-4">Zone UEMOA</h3>
+<ul class="space-y-3">
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Bénin</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Burkina Faso</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Côte d'Ivoire</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Guinée-Bissau</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Mali</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Niger</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Sénégal</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Togo</span>
+</li>
+</ul>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-md">
+<h3 class="text-xl font-semibold text-gray-900 mb-4">Zone CEMAC</h3>
+<ul class="space-y-3">
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Cameroun</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">République Centrafricaine</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Congo-Brazzaville</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Gabon</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Guinée équatoriale</span>
+</li>
+<li class="flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-3">
+<i class="ri-checkbox-circle-fill text-primary ri-lg"></i>
+</div>
+<span class="text-gray-700">Tchad</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ Section -->
+<section id="faq" class="py-16 bg-white">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">Questions fréquentes</h2>
+<p class="text-lg text-gray-700 max-w-3xl mx-auto">Trouvez les réponses aux questions les plus courantes sur nos services de prêt.</p>
+</div>
+<div class="max-w-3xl mx-auto">
+<div class="space-y-6">
+<div class="bg-white p-6 rounded-xl shadow-md">
+<button class="faq-question w-full flex justify-between items-center text-left">
+<span class="text-lg font-medium text-gray-900">Quels sont les critères d'éligibilité pour obtenir un prêt ?</span>
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-add-line ri-lg faq-icon"></i>
+</div>
+</button>
+<div class="faq-answer mt-4 hidden">
+<p class="text-gray-700">Pour être éligible, vous devez être résident d'un des pays de la zone UEMOA ou CEMAC, avoir plus de 18 ans, disposer d'une pièce d'identité valide, d'un compte bancaire ou mobile money, et pouvoir verser la garantie de 10% du montant emprunté.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-md">
+<button class="faq-question w-full flex justify-between items-center text-left">
+<span class="text-lg font-medium text-gray-900">Comment fonctionne la garantie de 10% ?</span>
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-add-line ri-lg faq-icon"></i>
+</div>
+</button>
+<div class="faq-answer mt-4 hidden">
+<p class="text-gray-700">La garantie de 10% est un dépôt de sécurité qui doit être versé avant le déblocage du prêt. Cette garantie vous sera intégralement restituée à la fin du remboursement du prêt, sans aucune déduction si tous les paiements ont été effectués à temps.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-md">
+<button class="faq-question w-full flex justify-between items-center text-left">
+<span class="text-lg font-medium text-gray-900">Quel est le taux d'intérêt appliqué ?</span>
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-add-line ri-lg faq-icon"></i>
+</div>
+</button>
+<div class="faq-answer mt-4 hidden">
+<p class="text-gray-700">Notre taux d'intérêt annuel est de 12%, soit 1% par mois. Ce taux est fixe et s'applique à tous nos prêts, quelle que soit la durée ou le montant emprunté.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-md">
+<button class="faq-question w-full flex justify-between items-center text-left">
+<span class="text-lg font-medium text-gray-900">Combien de temps faut-il pour recevoir le prêt après approbation ?</span>
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-add-line ri-lg faq-icon"></i>
+</div>
+</button>
+<div class="faq-answer mt-4 hidden">
+<p class="text-gray-700">Une fois votre demande approuvée et la garantie versée, le montant du prêt est généralement transféré dans un délai de 24 à 48 heures ouvrables sur votre compte bancaire ou mobile money.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-md">
+<button class="faq-question w-full flex justify-between items-center text-left">
+<span class="text-lg font-medium text-gray-900">Puis-je rembourser mon prêt par anticipation ?</span>
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-add-line ri-lg faq-icon"></i>
+</div>
+</button>
+<div class="faq-answer mt-4 hidden">
+<p class="text-gray-700">Oui, vous pouvez rembourser votre prêt par anticipation à tout moment, sans frais supplémentaires. Le remboursement anticipé vous permettra d'économiser sur les intérêts restants.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section id="contact" class="py-16 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">Contactez-nous</h2>
+<p class="text-lg text-gray-700 max-w-3xl mx-auto">Notre équipe est disponible pour répondre à toutes vos questions concernant nos services de prêt.</p>
+</div>
+<div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-white p-8 rounded-xl shadow-md">
+<h3 class="text-xl font-semibold text-gray-900 mb-6">Envoyez-nous un message</h3>
+<form>
+<div class="mb-4">
+<label for="contact-name" class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label>
+<input type="text" id="contact-name" name="contact-name" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Entrez votre nom complet" required>
+</div>
+<div class="mb-4">
+<label for="contact-email" class="block text-sm font-medium text-gray-700 mb-2">Adresse e-mail</label>
+<input type="email" id="contact-email" name="contact-email" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Entrez votre adresse e-mail" required>
+</div>
+<div class="mb-4">
+<label for="contact-subject" class="block text-sm font-medium text-gray-700 mb-2">Sujet</label>
+<input type="text" id="contact-subject" name="contact-subject" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Entrez le sujet de votre message" required>
+</div>
+<div class="mb-6">
+<label for="contact-message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+<textarea id="contact-message" name="contact-message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Entrez votre message" required></textarea>
+</div>
+<button type="submit" class="bg-primary text-white px-6 py-3 !rounded-button font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">
+Envoyer le message
+</button>
+</form>
+</div>
+<div class="bg-white p-8 rounded-xl shadow-md">
+<h3 class="text-xl font-semibold text-gray-900 mb-6">Nos coordonnées</h3>
+<div class="space-y-6">
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center mr-4 bg-primary/10 rounded-full">
+<i class="ri-whatsapp-line text-primary ri-lg"></i>
+</div>
+<div>
+<h4 class="text-base font-medium text-gray-900 mb-1">WhatsApp</h4>
+<p class="text-gray-700">+229 42 10 71 87</p>
+<p class="text-sm text-gray-500 mt-1">Disponible 7j/7 de 8h à 20h</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center mr-4 bg-primary/10 rounded-full">
+<i class="ri-mail-line text-primary ri-lg"></i>
+</div>
+<div>
+<h4 class="text-base font-medium text-gray-900 mb-1">Email</h4>
+<p class="text-gray-700">contact@kifaafinance.com</p>
+<p class="text-sm text-gray-500 mt-1">Réponse sous 24h</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center mr-4 bg-primary/10 rounded-full">
+<i class="ri-map-pin-line text-primary ri-lg"></i>
+</div>
+<div>
+<h4 class="text-base font-medium text-gray-900 mb-1">Siège social</h4>
+<p class="text-gray-700">Abidjan, Côte d'Ivoire</p>
+<p class="text-sm text-gray-500 mt-1">Plateau, Avenue de la République</p>
+</div>
+</div>
+<div class="pt-4">
+<h4 class="text-base font-medium text-gray-900 mb-3">Suivez-nous</h4>
+<div class="flex space-x-4">
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full hover:bg-primary/20 transition-colors">
+<i class="ri-facebook-fill text-primary"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full hover:bg-primary/20 transition-colors">
+<i class="ri-twitter-x-fill text-primary"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full hover:bg-primary/20 transition-colors">
+<i class="ri-instagram-fill text-primary"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full hover:bg-primary/20 transition-colors">
+<i class="ri-linkedin-fill text-primary"></i>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/22942107187" class="fixed bottom-6 right-6 w-16 h-16 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-colors z-50">
+<i class="ri-whatsapp-fill text-white ri-2x"></i>
+</a>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+<div>
+<a href="#" class="text-3xl font-['Pacifico'] text-white mb-4 inline-block">Kifaa Finance</a>
+<p class="text-gray-400 mb-4">Solutions de prêt adaptées pour l'Afrique francophone. Nous facilitons l'accès au financement pour les résidents des zones UEMOA et CEMAC.</p>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">Liens rapides</h4>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Accueil</a></li>
+<li><a href="#loan-form" class="text-gray-400 hover:text-white transition-colors">Demander un prêt</a></li>
+<li><a href="#process" class="text-gray-400 hover:text-white transition-colors">Comment ça marche</a></li>
+<li><a href="#countries" class="text-gray-400 hover:text-white transition-colors">Pays éligibles</a></li>
+<li><a href="#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">Légal</h4>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Conditions générales</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Politique de confidentialité</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Mentions légales</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cookies</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">Newsletter</h4>
+<p class="text-gray-400 mb-4">Inscrivez-vous pour recevoir nos actualités et offres spéciales.</p>
+<form class="flex">
+<input type="email" placeholder="Votre email" class="px-4 py-2 w-full border-none rounded-l focus:outline-none text-gray-900">
+<button type="submit" class="bg-primary text-white px-4 py-2 !rounded-r-button font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">
+S'inscrire
+</button>
+</form>
+</div>
+</div>
+<div class="border-t border-gray-800 pt-8">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Kifaa Finance. Tous droits réservés.</p>
+<div class="flex space-x-6">
+<div class="flex items-center">
+<i class="ri-visa-fill ri-lg mr-2"></i>
+<i class="ri-mastercard-fill ri-lg mr-2"></i>
+<i class="ri-paypal-fill ri-lg mr-2"></i>
+<i class="ri-bank-fill ri-lg"></i>
+</div>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Mobile menu toggle
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+mobileMenuButton.addEventListener('click', function() {
+mobileMenu.classList.toggle('hidden');
+});
+// Close mobile menu when clicking on a link
+const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+mobileMenuLinks.forEach(link => {
+link.addEventListener('click', function() {
+mobileMenu.classList.add('hidden');
+});
+});
+});
+document.addEventListener('DOMContentLoaded', function() {
+// Custom select implementation
+const customSelects = document.querySelectorAll('.custom-select');
+customSelects.forEach(select => {
+const selectSelected = select.querySelector('.select-selected');
+const selectItems = select.querySelector('.select-items');
+const originalSelect = select.querySelector('select');
+const options = select.querySelectorAll('.select-items div');
+selectSelected.addEventListener('click', function(e) {
+e.stopPropagation();
+this.classList.toggle('select-arrow-active');
+selectItems.classList.toggle('select-hide');
+selectItems.style.display = selectItems.style.display === 'block' ? 'none' : 'block';
+});
+options.forEach(option => {
+option.addEventListener('click', function(e) {
+e.stopPropagation();
+const value = this.getAttribute('data-value');
+const text = this.textContent;
+selectSelected.querySelector('span').textContent = text;
+originalSelect.value = value;
+// Trigger change event on the original select
+const event = new Event('change', { bubbles: true });
+originalSelect.dispatchEvent(event);
+selectItems.style.display = 'none';
+});
+});
+// Close select box when clicking outside
+document.addEventListener('click', function() {
+selectItems.style.display = 'none';
+selectSelected.classList.remove('select-arrow-active');
+});
+});
+});
+document.addEventListener('DOMContentLoaded', function() {
+// Loan calculator
+const loanAmountInput = document.getElementById('loan-amount');
+const loanDurationInput = document.getElementById('loan-duration');
+const guaranteeAmountInput = document.getElementById('guarantee-amount');
+const calculateBtn = document.getElementById('calculate-btn');
+const amortizationTableContainer = document.getElementById('amortization-table-container');
+const amortizationTableBody = document.getElementById('amortization-table-body');
+// Calculate guarantee amount on loan amount change
+loanAmountInput.addEventListener('input', function() {
+const loanAmount = parseFloat(this.value) || 0;
+const guaranteeAmount = loanAmount * 0.1;
+guaranteeAmountInput.value = guaranteeAmount.toLocaleString('fr-FR') + ' FCFA';
+});
+// Calculate amortization table
+calculateBtn.addEventListener('click', function() {
+const loanAmount = parseFloat(loanAmountInput.value) || 0;
+const loanDuration = parseInt(loanDurationInput.value) || 0;
+if (loanAmount <= 0 || loanDuration <= 0) {
+alert('Veuillez entrer un montant et une durée valides.');
+return;
+}
+// Annual interest rate of 12% (1% per month)
+const monthlyInterestRate = 0.01;
+// Calculate monthly payment using the formula: P = (r * PV) / (1 - (1 + r)^-n)
+const monthlyPayment = (monthlyInterestRate * loanAmount) / (1 - Math.pow(1 + monthlyInterestRate, -loanDuration));
+// Generate amortization table
+amortizationTableBody.innerHTML = '';
+let remainingBalance = loanAmount;
+for (let month = 1; month <= loanDuration; month++) {
+const interestPayment = remainingBalance * monthlyInterestRate;
+const principalPayment = monthlyPayment - interestPayment;
+remainingBalance -= principalPayment;
+const row = document.createElement('tr');
+row.innerHTML = `
+<td class="border border-gray-200">${month}</td>
+<td class="border border-gray-200">${Math.round(monthlyPayment).toLocaleString('fr-FR')}</td>
+<td class="border border-gray-200">${Math.round(principalPayment).toLocaleString('fr-FR')}</td>
+<td class="border border-gray-200">${Math.round(interestPayment).toLocaleString('fr-FR')}</td>
+<td class="border border-gray-200">${Math.max(0, Math.round(remainingBalance)).toLocaleString('fr-FR')}</td>
+`;
+amortizationTableBody.appendChild(row);
+}
+amortizationTableContainer.classList.remove('hidden');
+});
+});
+document.addEventListener('DOMContentLoaded', function() {
+// FAQ accordion
+const faqQuestions = document.querySelectorAll('.faq-question');
+faqQuestions.forEach(question => {
+question.addEventListener('click', function() {
+const answer = this.nextElementSibling;
+const icon = this.querySelector('.faq-icon');
+answer.classList.toggle('hidden');
+if (answer.classList.contains('hidden')) {
+icon.classList.remove('ri-subtract-line');
+icon.classList.add('ri-add-line');
+} else {
+icon.classList.remove('ri-add-line');
+icon.classList.add('ri-subtract-line');
+}
+});
+});
+});
+document.addEventListener('DOMContentLoaded', function() {
+// Form submission
+const loanRequestForm = document.getElementById('loan-request-form');
+loanRequestForm.addEventListener('submit', function(e) {
+e.preventDefault();
+// Validate form
+const fullname = document.getElementById('fullname').value;
+const email = document.getElementById('email').value;
+const phone = document.getElementById('phone').value;
+const country = document.getElementById('country').value;
+const loanAmount = document.getElementById('loan-amount').value;
+const loanDuration = document.getElementById('loan-duration').value;
+const terms = document.getElementById('terms').checked;
+if (!fullname || !email || !phone || !country || !loanAmount || !loanDuration || !terms) {
+alert('Veuillez remplir tous les champs obligatoires.');
+return;
+}
+// Here you would normally send the form data to your server
+// For demo purposes, we'll redirect to WhatsApp
+window.location.href = 'https://wa.me/22942107187';
+// Reset form
+loanRequestForm.reset();
+document.getElementById('amortization-table-container').classList.add('hidden');
+});
+});
+</script>
+</body>
+</html>
